@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Learning Text-Processing (Posts about test)</title><link>https://necromuralist.github.io/text-processing/</link><description></description><atom:link href="https://necromuralist.github.io/text-processing/categories/test.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><lastBuildDate>Fri, 27 Jul 2018 23:58:29 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Test</title><link>https://necromuralist.github.io/text-processing/posts/test/</link><dc:creator>Cloistered Monkey</dc:creator><description>&lt;div id="outline-container-org0987764" class="outline-2"&gt;
+&lt;h2 id="org0987764"&gt;Introduction&lt;/h2&gt;
+&lt;div class="outline-text-2" id="text-org0987764"&gt;
+&lt;p&gt;
+This is a first post to see if it will build.
+&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;</description><category>test</category><guid>https://necromuralist.github.io/text-processing/posts/test/</guid><pubDate>Fri, 27 Jul 2018 23:57:13 GMT</pubDate></item></channel></rss>
