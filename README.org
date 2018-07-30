@@ -1,0 +1,3 @@
+#+TITLE:Notes On Text-Processing
+
+These are my notes on revisiting text-processing with python. The built page is [[https://necromuralist.github.io/text-processing/][on github]].
