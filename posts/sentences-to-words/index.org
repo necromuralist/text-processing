@@ -1,0 +1,35 @@
+#+BEGIN_COMMENT
+.. title: Sentences to Words
+.. slug: sentences-to-words
+.. date: 2018-07-29 20:40:20 UTC-07:00
+.. tags: tokenizing nltk
+.. category: tokenizing
+.. link: 
+.. description: Tokenizing sentences into words.
+.. type: text
+#+END_COMMENT
+
+#+BEGIN_SRC python :session tokenizing :results none
+# from pypi
+from nltk.tokenize import (
+    TreebankWordTokenizer,
+    )
+#+END_SRC
+* Introduction
+  We're going to look at an NLTK tokenizer that takes a sentence and breaks it up into words. In the simplest case you could just split the sentence on whitespace, but the presence of punctuation makes the job a little harder.
+* TreebankWordTokenizer
+  The =TreebankWordTokenizer= uses the [[https://catalog.ldc.upenn.edu/ldc99t42][Penn Treebank]] which created a corpus using Wall Street Journal articles.
+
+#+BEGIN_SRC python :session tokenizing :results none
+source = "I'm a man who can't say no."
+#+END_SRC
+
+#+BEGIN_SRC python :session tokenizing :results output :exports both
+tokenizer = TreebankWordTokenizer()
+print(tokenizer.tokenize(source))
+#+END_SRC
+
+#+RESULTS:
+: ['I', "'m", 'a', 'man', 'who', 'ca', "n't", 'say', 'no', '.']
+
+Looking at the output, you can see that words with contractions are broken up. At first this seemed odd to me, but when you realize that contractions are made up of multiple words this makes sense, although the actual output seems like it would be hard to use (how would you know tha 'I' "'m" means 'I' 'am'?).

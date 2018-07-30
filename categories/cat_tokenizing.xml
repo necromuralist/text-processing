@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Learning Text-Processing (Posts about tokenizing)</title><link>https://necromuralist.github.io/text-processing/</link><description></description><atom:link href="https://necromuralist.github.io/text-processing/categories/cat_tokenizing.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><lastBuildDate>Mon, 30 Jul 2018 04:26:16 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Tokenizing Words With Regular Expressions</title><link>https://necromuralist.github.io/text-processing/posts/tokenizing-words-with-regular-expressions/</link><dc:creator>Cloistered Monkey</dc:creator><description>&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;nltk.tokenize&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;RegexpTokenizer&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;div id="outline-container-org6a142ce" class="outline-2"&gt;
+&lt;h2 id="org6a142ce"&gt;Introduction&lt;/h2&gt;
+&lt;div class="outline-text-2" id="text-org6a142ce"&gt;
+&lt;p&gt;
+While you can tokenize sentences into words using the &lt;code&gt;TreebankTokenizer&lt;/code&gt;, NLTK also provides the &lt;code&gt;RegexpTokenizer&lt;/code&gt; to give you more flexibility in tokenizing sentences. You could do the same thing wih the built-in &lt;code&gt;re&lt;/code&gt; module, but he interface to the &lt;code&gt;RegexpTokenizer&lt;/code&gt; matches the other tokenizers so you can use use them interchangeably depending on what you need.
+&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div id="outline-container-orgfa52f0d" class="outline-2"&gt;
+&lt;h2 id="orgfa52f0d"&gt;Word Tokenization&lt;/h2&gt;
+&lt;div class="outline-text-2" id="text-orgfa52f0d"&gt;
+&lt;p&gt;
+By default, the &lt;code&gt;RegexpTokenizer&lt;/code&gt; will match words and split on anything that doesn't match the expression given, assuming that they make up the gaps. Here's how to match any alphanumeric characters and apostrophes.
+&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;tokenizer&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;RegexpTokenizer&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"[\w']+"&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;source&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;"I'm a man of wealth and taste, and touch, and smell."&lt;/span&gt;
+&lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;tokenizer&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;tokenize&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;source&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;pre class="example"&gt;
+["I'm", 'a', 'man', 'of', 'wealth', 'and', 'taste', 'and', 'touch', 'and', 'smell']
+
+&lt;/pre&gt;
+
+&lt;p&gt;
+Note that by adding the apostrophe ("'") to the expression we were able to keep the contraction together, something that the &lt;code&gt;TreebankTokenizer&lt;/code&gt; doesn't do.
+&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id="outline-container-org5f5a7bb" class="outline-2"&gt;
+&lt;h2 id="org5f5a7bb"&gt;Gap Tokenization&lt;/h2&gt;
+&lt;div class="outline-text-2" id="text-org5f5a7bb"&gt;
+&lt;p&gt;
+Alternatively, you can define what the tokenizer should split on. There are already tokenizers for white-space, but you could also add punctiation this way.
+&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;tokenizer&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;RegexpTokenizer&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"[\s,]+"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;gaps&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;True&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;tokenizer&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;tokenize&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;source&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;pre class="example"&gt;
+["I'm", 'a', 'man', 'of', 'wealth', 'and', 'taste', 'and', 'touch', 'and', 'smell.']
+
+&lt;/pre&gt;
+
+&lt;p&gt;
+The only difference here is that the period was kept, but if you use a sentence tokenizer this would likely not happen anyway.
+&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;</description><category>tokenizing nltk</category><guid>https://necromuralist.github.io/text-processing/posts/tokenizing-words-with-regular-expressions/</guid><pubDate>Mon, 30 Jul 2018 04:15:21 GMT</pubDate></item><item><title>Sentences to Words</title><link>https://necromuralist.github.io/text-processing/posts/sentences-to-words/</link><dc:creator>Cloistered Monkey</dc:creator><description>&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# from pypi&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;nltk.tokenize&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;
+    &lt;span class="n"&gt;TreebankWordTokenizer&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;div id="outline-container-org808f762" class="outline-2"&gt;
+&lt;h2 id="org808f762"&gt;Introduction&lt;/h2&gt;
+&lt;div class="outline-text-2" id="text-org808f762"&gt;
+&lt;p&gt;
+We're going to look at an NLTK tokenizer that takes a sentence and breaks it up into words. In the simplest case you could just split the sentence on whitespace, but the presence of punctuation makes the job a little harder.
+&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id="outline-container-orgb622d1c" class="outline-2"&gt;
+&lt;h2 id="orgb622d1c"&gt;TreebankWordTokenizer&lt;/h2&gt;
+&lt;div class="outline-text-2" id="text-orgb622d1c"&gt;
+&lt;p&gt;
+The &lt;code&gt;TreebankWordTokenizer&lt;/code&gt; uses the &lt;a href="https://catalog.ldc.upenn.edu/ldc99t42"&gt;Penn Treebank&lt;/a&gt; which created a corpus using Wall Street Journal articles.
+&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;source&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;"I'm a man who can't say no."&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;tokenizer&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;TreebankWordTokenizer&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;tokenizer&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;tokenize&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;source&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;pre class="example"&gt;
+['I', "'m", 'a', 'man', 'who', 'ca', "n't", 'say', 'no', '.']
+
+&lt;/pre&gt;
+
+&lt;p&gt;
+Looking at the output, you can see that words with contractions are broken up. At first this seemed odd to me, but when you realize that contractions are made up of multiple words this makes sense, although the actual output seems like it would be hard to use (how would you know tha 'I' "'m" means 'I' 'am'?).
+&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;</description><category>tokenizing nltk</category><guid>https://necromuralist.github.io/text-processing/posts/sentences-to-words/</guid><pubDate>Mon, 30 Jul 2018 03:40:20 GMT</pubDate></item><item><title>Tokenizing Text To Sentences With NLTK</title><link>https://necromuralist.github.io/text-processing/posts/tokenizing-text-to-sentences-with-nltk-and-wordnet/</link><dc:creator>Cloistered Monkey</dc:creator><description>&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# python standard library&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;http&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;HTTPStatus&lt;/span&gt;
+&lt;span class="c1"&gt;# pypi&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;requests&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;nltk&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;div id="outline-container-org5a54186" class="outline-2"&gt;
+&lt;h2 id="org5a54186"&gt;Introduction&lt;/h2&gt;
+&lt;div class="outline-text-2" id="text-org5a54186"&gt;
+&lt;p&gt;
+This is going to be a quick look at splitting a text source into sentences.
+&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div id="outline-container-org1640630" class="outline-2"&gt;
+&lt;h2 id="org1640630"&gt;The Source&lt;/h2&gt;
+&lt;div class="outline-text-2" id="text-org1640630"&gt;
+&lt;p&gt;
+I'm going to use &lt;a href="https://en.wikipedia.org/wiki/Siddhartha_(novel)"&gt;Siddhartha&lt;/a&gt;, by Herman Hesse, which is available from Project Gutenberg.
+&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;url&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;"https://www.gutenberg.org/cache/epub/2500/pg2500.txt"&lt;/span&gt;
+&lt;span class="n"&gt;response&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;requests&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;url&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="k"&gt;assert&lt;/span&gt; &lt;span class="n"&gt;response&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;status_code&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="n"&gt;HTTPStatus&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;OK&lt;/span&gt;
+&lt;span class="n"&gt;source&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;response&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;text&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;source&lt;/span&gt;&lt;span class="p"&gt;[:&lt;/span&gt;&lt;span class="mi"&gt;200&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;pre class="example"&gt;
+﻿The Project Gutenberg EBook of Siddhartha, by Herman Hesse
+
+This eBook is for the use of anyone anywhere at no cost and with
+almost no restrictions whatsoever.  You may copy it, give it away or
+r
+
+&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div id="outline-container-org1ed3bfb" class="outline-2"&gt;
+&lt;h2 id="org1ed3bfb"&gt;The Punkt Sentence Tokenizer&lt;/h2&gt;
+&lt;div class="outline-text-2" id="text-org1ed3bfb"&gt;
+&lt;p&gt;
+The NLTK &lt;a href="https://www.nltk.org/api/nltk.tokenize.html#module-nltk.tokenize.punkt"&gt;PunktSentenceTokenizer&lt;/a&gt; uses an unsupervised model to break texts up into sentences. Since you have to train the model to make it work you should load it from a pickle file. In this case we want the model trained on the English language so I'll load &lt;code&gt;english.pickle&lt;/code&gt;.
+&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;tokenizer&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;nltk&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;load&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"tokenizers/punkt/PY3/english.pickle"&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;
+Now you can break Sidhartha up into sentences using the tokenizer.
+&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;sentences&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;tokenizer&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;tokenize&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;response&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;text&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sentences&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;pre class="example"&gt;
+1972
+
+&lt;/pre&gt;
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;index&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;sentence&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;enumerate&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sentences&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="p"&gt;]):&lt;/span&gt;
+    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"   {}: {}"&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;format&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;index&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;sentence&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;replace&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"&lt;/span&gt;&lt;span class="se"&gt;\r&lt;/span&gt;&lt;span class="s2"&gt;"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;""&lt;/span&gt;&lt;span class="p"&gt;)))&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;pre class="example"&gt;
+   0: You may copy it, give it away or
+re-use it under the terms of the Project Gutenberg License included
+with this eBook or online at www.gutenberg.org
+
+
+Title: Siddhartha
+
+Author: Herman Hesse
+
+Translator: Gunther Olesch, Anke Dreher, Amy Coulter, Stefan Langer and Semyon Chaichenets
+
+Release Date: April 6, 2008 [EBook #2500]
+Last updated: July 2, 2011
+Last updated: January 23, 2013
+
+Language: English
+
+
+*** START OF THIS PROJECT GUTENBERG EBOOK SIDDHARTHA ***
+
+
+
+
+Produced by Michael Pullen,  Chandra Yenco, Isaac Jones
+
+
+
+
+
+SIDDHARTHA
+
+An Indian Tale
+
+by Hermann Hesse
+
+
+
+
+
+FIRST PART
+
+To Romain Rolland, my dear friend
+
+
+
+
+THE SON OF THE BRAHMAN
+
+In the shade of the house, in the sunshine of the riverbank near the
+boats, in the shade of the Sal-wood forest, in the shade of the fig tree
+is where Siddhartha grew up, the handsome son of the Brahman, the young
+falcon, together with his friend Govinda, son of a Brahman.
+   1: The sun
+tanned his light shoulders by the banks of the river when bathing,
+performing the sacred ablutions, the sacred offerings.
+   2: In the mango
+grove, shade poured into his black eyes, when playing as a boy, when
+his mother sang, when the sacred offerings were made, when his father,
+the scholar, taught him, when the wise men talked.
+   3: For a long time,
+Siddhartha had been partaking in the discussions of the wise men,
+practising debate with Govinda, practising with Govinda the art of
+reflection, the service of meditation.
+&lt;/pre&gt;
+
+
+&lt;p&gt;
+So you can see that it didn't get the pre-amble quite right. It took all the lines up until the first sentence of the text as being one sentence, but then after that it seemed to do okay. It was probably looking for periods or some such. This is important to note, because it means that it might not work as well for things like logs or other sources where the input isn't made up of complete, well-formed sentences.
+&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div id="outline-container-org4b56d3a" class="outline-2"&gt;
+&lt;h2 id="org4b56d3a"&gt;References&lt;/h2&gt;
+&lt;div class="outline-text-2" id="text-org4b56d3a"&gt;
+&lt;ul class="org-ul"&gt;
+&lt;li&gt;“Natural Language Toolkit — NLTK 3.3 Documentation.” Accessed July 30, 2018. &lt;a href="http://www.nltk.org/"&gt;http://www.nltk.org/&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Perkins, Jacob. Python 3 Text Processing with NLTK 3 Cookbook: Over 80 Practical Recipes on Natural Language Processing Techniques Using Python’s NLTK 3.0. 2. ed. Packt Open Source. Birmingham: Packt Publ, 2014.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;/div&gt;</description><category>tokenizing nltk wordnet basics</category><guid>https://necromuralist.github.io/text-processing/posts/tokenizing-text-to-sentences-with-nltk-and-wordnet/</guid><pubDate>Mon, 30 Jul 2018 00:43:49 GMT</pubDate></item></channel></rss>

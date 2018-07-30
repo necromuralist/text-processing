@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Learning Text-Processing (Posts about tokenizing nltk)</title><link>https://necromuralist.github.io/text-processing/</link><description></description><atom:link href="https://necromuralist.github.io/text-processing/categories/tokenizing-nltk.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><lastBuildDate>Mon, 30 Jul 2018 04:26:16 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Tokenizing Words With Regular Expressions</title><link>https://necromuralist.github.io/text-processing/posts/tokenizing-words-with-regular-expressions/</link><dc:creator>Cloistered Monkey</dc:creator><description>&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;nltk.tokenize&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;RegexpTokenizer&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;div id="outline-container-org6a142ce" class="outline-2"&gt;
+&lt;h2 id="org6a142ce"&gt;Introduction&lt;/h2&gt;
+&lt;div class="outline-text-2" id="text-org6a142ce"&gt;
+&lt;p&gt;
+While you can tokenize sentences into words using the &lt;code&gt;TreebankTokenizer&lt;/code&gt;, NLTK also provides the &lt;code&gt;RegexpTokenizer&lt;/code&gt; to give you more flexibility in tokenizing sentences. You could do the same thing wih the built-in &lt;code&gt;re&lt;/code&gt; module, but he interface to the &lt;code&gt;RegexpTokenizer&lt;/code&gt; matches the other tokenizers so you can use use them interchangeably depending on what you need.
+&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div id="outline-container-orgfa52f0d" class="outline-2"&gt;
+&lt;h2 id="orgfa52f0d"&gt;Word Tokenization&lt;/h2&gt;
+&lt;div class="outline-text-2" id="text-orgfa52f0d"&gt;
+&lt;p&gt;
+By default, the &lt;code&gt;RegexpTokenizer&lt;/code&gt; will match words and split on anything that doesn't match the expression given, assuming that they make up the gaps. Here's how to match any alphanumeric characters and apostrophes.
+&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;tokenizer&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;RegexpTokenizer&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"[\w']+"&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;source&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;"I'm a man of wealth and taste, and touch, and smell."&lt;/span&gt;
+&lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;tokenizer&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;tokenize&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;source&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;pre class="example"&gt;
+["I'm", 'a', 'man', 'of', 'wealth', 'and', 'taste', 'and', 'touch', 'and', 'smell']
+
+&lt;/pre&gt;
+
+&lt;p&gt;
+Note that by adding the apostrophe ("'") to the expression we were able to keep the contraction together, something that the &lt;code&gt;TreebankTokenizer&lt;/code&gt; doesn't do.
+&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id="outline-container-org5f5a7bb" class="outline-2"&gt;
+&lt;h2 id="org5f5a7bb"&gt;Gap Tokenization&lt;/h2&gt;
+&lt;div class="outline-text-2" id="text-org5f5a7bb"&gt;
+&lt;p&gt;
+Alternatively, you can define what the tokenizer should split on. There are already tokenizers for white-space, but you could also add punctiation this way.
+&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;tokenizer&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;RegexpTokenizer&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"[\s,]+"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;gaps&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;True&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;tokenizer&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;tokenize&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;source&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;pre class="example"&gt;
+["I'm", 'a', 'man', 'of', 'wealth', 'and', 'taste', 'and', 'touch', 'and', 'smell.']
+
+&lt;/pre&gt;
+
+&lt;p&gt;
+The only difference here is that the period was kept, but if you use a sentence tokenizer this would likely not happen anyway.
+&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;</description><category>tokenizing nltk</category><guid>https://necromuralist.github.io/text-processing/posts/tokenizing-words-with-regular-expressions/</guid><pubDate>Mon, 30 Jul 2018 04:15:21 GMT</pubDate></item><item><title>Sentences to Words</title><link>https://necromuralist.github.io/text-processing/posts/sentences-to-words/</link><dc:creator>Cloistered Monkey</dc:creator><description>&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# from pypi&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;nltk.tokenize&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;
+    &lt;span class="n"&gt;TreebankWordTokenizer&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;div id="outline-container-org808f762" class="outline-2"&gt;
+&lt;h2 id="org808f762"&gt;Introduction&lt;/h2&gt;
+&lt;div class="outline-text-2" id="text-org808f762"&gt;
+&lt;p&gt;
+We're going to look at an NLTK tokenizer that takes a sentence and breaks it up into words. In the simplest case you could just split the sentence on whitespace, but the presence of punctuation makes the job a little harder.
+&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id="outline-container-orgb622d1c" class="outline-2"&gt;
+&lt;h2 id="orgb622d1c"&gt;TreebankWordTokenizer&lt;/h2&gt;
+&lt;div class="outline-text-2" id="text-orgb622d1c"&gt;
+&lt;p&gt;
+The &lt;code&gt;TreebankWordTokenizer&lt;/code&gt; uses the &lt;a href="https://catalog.ldc.upenn.edu/ldc99t42"&gt;Penn Treebank&lt;/a&gt; which created a corpus using Wall Street Journal articles.
+&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;source&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;"I'm a man who can't say no."&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;tokenizer&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;TreebankWordTokenizer&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;tokenizer&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;tokenize&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;source&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;pre class="example"&gt;
+['I', "'m", 'a', 'man', 'who', 'ca', "n't", 'say', 'no', '.']
+
+&lt;/pre&gt;
+
+&lt;p&gt;
+Looking at the output, you can see that words with contractions are broken up. At first this seemed odd to me, but when you realize that contractions are made up of multiple words this makes sense, although the actual output seems like it would be hard to use (how would you know tha 'I' "'m" means 'I' 'am'?).
+&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;</description><category>tokenizing nltk</category><guid>https://necromuralist.github.io/text-processing/posts/sentences-to-words/</guid><pubDate>Mon, 30 Jul 2018 03:40:20 GMT</pubDate></item></channel></rss>

@@ -1,0 +1,140 @@
+#+BEGIN_COMMENT
+.. title: Tokenizing Text To Sentences With NLTK
+.. slug: tokenizing-text-to-sentences-with-nltk-and-wordnet
+.. date: 2018-07-29 17:43:49 UTC-07:00
+.. tags: tokenizing nltk wordnet basics
+.. category: tokenizing
+.. link: 
+.. description: An introduction to breaking a text up into sentences.
+.. type: text
+#+END_COMMENT
+
+#+BEGIN_SRC python :session tokenizing :results none
+# python standard library
+from http import HTTPStatus
+# pypi
+import requests
+import nltk
+#+END_SRC
+
+* Introduction
+  This is going to be a quick look at splitting a text source into sentences.
+
+* The Source
+  I'm going to use [[https://en.wikipedia.org/wiki/Siddhartha_(novel)][Siddhartha]], by Herman Hesse, which is available from Project Gutenberg.
+
+#+BEGIN_SRC python :session tokenizing :results none
+url = "https://www.gutenberg.org/cache/epub/2500/pg2500.txt"
+response = requests.get(url)
+assert response.status_code == HTTPStatus.OK
+source = response.text
+#+END_SRC
+
+#+BEGIN_SRC python :session tokenizing :results output :exports both
+print(source[:200])
+#+END_SRC
+
+#+RESULTS:
+: ﻿The Project Gutenberg EBook of Siddhartha, by Herman Hesse
+: 
+: This eBook is for the use of anyone anywhere at no cost and with
+: almost no restrictions whatsoever.  You may copy it, give it away or
+: r
+
+* The Punkt Sentence Tokenizer
+  The NLTK [[https://www.nltk.org/api/nltk.tokenize.html#module-nltk.tokenize.punkt][PunktSentenceTokenizer]] uses an unsupervised model to break texts up into sentences. Since you have to train the model to make it work you should load it from a pickle file. In this case we want the model trained on the English language so I'll load =english.pickle=.
+
+#+BEGIN_SRC python :session tokenizing :results none
+tokenizer = nltk.data.load("tokenizers/punkt/PY3/english.pickle")
+#+END_SRC
+
+Now you can break Sidhartha up into sentences using the tokenizer.
+
+#+BEGIN_SRC python :session tokenizing :results output :exports both
+sentences = tokenizer.tokenize(response.text)
+print(len(sentences))
+#+END_SRC
+
+#+RESULTS:
+: 1972
+
+#+BEGIN_SRC python :session tokenizing :results output :exports both
+for index, sentence in enumerate(sentences[1:5]):
+    print("   {}: {}".format(index, sentence.replace("\r", "")))
+#+END_SRC
+
+#+RESULTS:
+#+begin_example
+   0: You may copy it, give it away or
+re-use it under the terms of the Project Gutenberg License included
+with this eBook or online at www.gutenberg.org
+
+
+Title: Siddhartha
+
+Author: Herman Hesse
+
+Translator: Gunther Olesch, Anke Dreher, Amy Coulter, Stefan Langer and Semyon Chaichenets
+
+Release Date: April 6, 2008 [EBook #2500]
+Last updated: July 2, 2011
+Last updated: January 23, 2013
+
+Language: English
+
+
+,*** START OF THIS PROJECT GUTENBERG EBOOK SIDDHARTHA ***
+
+
+
+
+Produced by Michael Pullen,  Chandra Yenco, Isaac Jones
+
+
+
+
+
+SIDDHARTHA
+
+An Indian Tale
+
+by Hermann Hesse
+
+
+
+
+
+FIRST PART
+
+To Romain Rolland, my dear friend
+
+
+
+
+THE SON OF THE BRAHMAN
+
+In the shade of the house, in the sunshine of the riverbank near the
+boats, in the shade of the Sal-wood forest, in the shade of the fig tree
+is where Siddhartha grew up, the handsome son of the Brahman, the young
+falcon, together with his friend Govinda, son of a Brahman.
+   1: The sun
+tanned his light shoulders by the banks of the river when bathing,
+performing the sacred ablutions, the sacred offerings.
+   2: In the mango
+grove, shade poured into his black eyes, when playing as a boy, when
+his mother sang, when the sacred offerings were made, when his father,
+the scholar, taught him, when the wise men talked.
+   3: For a long time,
+Siddhartha had been partaking in the discussions of the wise men,
+practising debate with Govinda, practising with Govinda the art of
+reflection, the service of meditation.
+#+end_example
+
+
+So you can see that it didn't get the pre-amble quite right. It took all the lines up until the first sentence of the text as being one sentence, but then after that it seemed to do okay. It was probably looking for periods or some such. This is important to note, because it means that it might not work as well for things like logs or other sources where the input isn't made up of complete, well-formed sentences.
+
+* References
+
+  - “Natural Language Toolkit — NLTK 3.3 Documentation.” Accessed July 30, 2018. http://www.nltk.org/.
+  - Perkins, Jacob. Python 3 Text Processing with NLTK 3 Cookbook: Over 80 Practical Recipes on Natural Language Processing Techniques Using Python’s NLTK 3.0. 2. ed. Packt Open Source. Birmingham: Packt Publ, 2014.
+

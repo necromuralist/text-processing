@@ -13,7 +13,7 @@
 <link rel="alternate" type="application/rss+xml" title="RSS" href="rss.xml">
 <link rel="canonical" href="https://necromuralist.github.io/text-processing/">
 <!--[if lt IE 9]><script src="assets/js/html5.js"></script><![endif]--><script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML">
-</script><link rel="prefetch" href="posts/test/" type="text/html">
+</script><link rel="prefetch" href="posts/tokenizing-words-with-regular-expressions/" type="text/html">
 </head>
 <body>
 <a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
@@ -81,7 +81,280 @@
 
     
 <div class="postindex">
-    <article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/test/" class="u-url">Test</a></h1>
+    <article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/tokenizing-words-with-regular-expressions/" class="u-url">Tokenizing Words With Regular Expressions</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
+                Cloistered Monkey
+            </span></p>
+            <p class="dateline"><a href="posts/tokenizing-words-with-regular-expressions/" rel="bookmark"><time class="published dt-published" datetime="2018-07-29T21:15:21-07:00" title="2018-07-29 21:15">2018-07-29 21:15</time></a></p>
+        </div>
+    </header><div class="e-content entry-content">
+    <div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">nltk.tokenize</span> <span class="kn">import</span> <span class="n">RegexpTokenizer</span>
+</pre></div>
+
+<div id="outline-container-org6a142ce" class="outline-2">
+<h2 id="org6a142ce">Introduction</h2>
+<div class="outline-text-2" id="text-org6a142ce">
+<p>
+While you can tokenize sentences into words using the <code>TreebankTokenizer</code>, NLTK also provides the <code>RegexpTokenizer</code> to give you more flexibility in tokenizing sentences. You could do the same thing wih the built-in <code>re</code> module, but he interface to the <code>RegexpTokenizer</code> matches the other tokenizers so you can use use them interchangeably depending on what you need.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgfa52f0d" class="outline-2">
+<h2 id="orgfa52f0d">Word Tokenization</h2>
+<div class="outline-text-2" id="text-orgfa52f0d">
+<p>
+By default, the <code>RegexpTokenizer</code> will match words and split on anything that doesn't match the expression given, assuming that they make up the gaps. Here's how to match any alphanumeric characters and apostrophes.
+</p>
+
+<div class="highlight"><pre><span></span><span class="n">tokenizer</span> <span class="o">=</span> <span class="n">RegexpTokenizer</span><span class="p">(</span><span class="s2">"[\w']+"</span><span class="p">)</span>
+</pre></div>
+
+<div class="highlight"><pre><span></span><span class="n">source</span> <span class="o">=</span> <span class="s2">"I'm a man of wealth and taste, and touch, and smell."</span>
+<span class="k">print</span><span class="p">(</span><span class="n">tokenizer</span><span class="o">.</span><span class="n">tokenize</span><span class="p">(</span><span class="n">source</span><span class="p">))</span>
+</pre></div>
+
+<pre class="example">
+["I'm", 'a', 'man', 'of', 'wealth', 'and', 'taste', 'and', 'touch', 'and', 'smell']
+
+</pre>
+
+<p>
+Note that by adding the apostrophe ("'") to the expression we were able to keep the contraction together, something that the <code>TreebankTokenizer</code> doesn't do.
+</p>
+</div>
+</div>
+<div id="outline-container-org5f5a7bb" class="outline-2">
+<h2 id="org5f5a7bb">Gap Tokenization</h2>
+<div class="outline-text-2" id="text-org5f5a7bb">
+<p>
+Alternatively, you can define what the tokenizer should split on. There are already tokenizers for white-space, but you could also add punctiation this way.
+</p>
+
+<div class="highlight"><pre><span></span><span class="n">tokenizer</span> <span class="o">=</span> <span class="n">RegexpTokenizer</span><span class="p">(</span><span class="s2">"[\s,]+"</span><span class="p">,</span> <span class="n">gaps</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">tokenizer</span><span class="o">.</span><span class="n">tokenize</span><span class="p">(</span><span class="n">source</span><span class="p">))</span>
+</pre></div>
+
+<pre class="example">
+["I'm", 'a', 'man', 'of', 'wealth', 'and', 'taste', 'and', 'touch', 'and', 'smell.']
+
+</pre>
+
+<p>
+The only difference here is that the period was kept, but if you use a sentence tokenizer this would likely not happen anyway.
+</p>
+</div>
+</div>
+    </div>
+    </article><article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/sentences-to-words/" class="u-url">Sentences to Words</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
+                Cloistered Monkey
+            </span></p>
+            <p class="dateline"><a href="posts/sentences-to-words/" rel="bookmark"><time class="published dt-published" datetime="2018-07-29T20:40:20-07:00" title="2018-07-29 20:40">2018-07-29 20:40</time></a></p>
+        </div>
+    </header><div class="e-content entry-content">
+    <div class="highlight"><pre><span></span><span class="c1"># from pypi</span>
+<span class="kn">from</span> <span class="nn">nltk.tokenize</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">TreebankWordTokenizer</span><span class="p">,</span>
+    <span class="p">)</span>
+</pre></div>
+<div id="outline-container-org808f762" class="outline-2">
+<h2 id="org808f762">Introduction</h2>
+<div class="outline-text-2" id="text-org808f762">
+<p>
+We're going to look at an NLTK tokenizer that takes a sentence and breaks it up into words. In the simplest case you could just split the sentence on whitespace, but the presence of punctuation makes the job a little harder.
+</p>
+</div>
+</div>
+<div id="outline-container-orgb622d1c" class="outline-2">
+<h2 id="orgb622d1c">TreebankWordTokenizer</h2>
+<div class="outline-text-2" id="text-orgb622d1c">
+<p>
+The <code>TreebankWordTokenizer</code> uses the <a href="https://catalog.ldc.upenn.edu/ldc99t42">Penn Treebank</a> which created a corpus using Wall Street Journal articles.
+</p>
+
+<div class="highlight"><pre><span></span><span class="n">source</span> <span class="o">=</span> <span class="s2">"I'm a man who can't say no."</span>
+</pre></div>
+
+<div class="highlight"><pre><span></span><span class="n">tokenizer</span> <span class="o">=</span> <span class="n">TreebankWordTokenizer</span><span class="p">()</span>
+<span class="k">print</span><span class="p">(</span><span class="n">tokenizer</span><span class="o">.</span><span class="n">tokenize</span><span class="p">(</span><span class="n">source</span><span class="p">))</span>
+</pre></div>
+
+<pre class="example">
+['I', "'m", 'a', 'man', 'who', 'ca', "n't", 'say', 'no', '.']
+
+</pre>
+
+<p>
+Looking at the output, you can see that words with contractions are broken up. At first this seemed odd to me, but when you realize that contractions are made up of multiple words this makes sense, although the actual output seems like it would be hard to use (how would you know tha 'I' "'m" means 'I' 'am'?).
+</p>
+</div>
+</div>
+    </div>
+    </article><article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/tokenizing-text-to-sentences-with-nltk-and-wordnet/" class="u-url">Tokenizing Text To Sentences With NLTK</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
+                Cloistered Monkey
+            </span></p>
+            <p class="dateline"><a href="posts/tokenizing-text-to-sentences-with-nltk-and-wordnet/" rel="bookmark"><time class="published dt-published" datetime="2018-07-29T17:43:49-07:00" title="2018-07-29 17:43">2018-07-29 17:43</time></a></p>
+        </div>
+    </header><div class="e-content entry-content">
+    <div class="highlight"><pre><span></span><span class="c1"># python standard library</span>
+<span class="kn">from</span> <span class="nn">http</span> <span class="kn">import</span> <span class="n">HTTPStatus</span>
+<span class="c1"># pypi</span>
+<span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">import</span> <span class="nn">nltk</span>
+</pre></div>
+
+<div id="outline-container-org5a54186" class="outline-2">
+<h2 id="org5a54186">Introduction</h2>
+<div class="outline-text-2" id="text-org5a54186">
+<p>
+This is going to be a quick look at splitting a text source into sentences.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org1640630" class="outline-2">
+<h2 id="org1640630">The Source</h2>
+<div class="outline-text-2" id="text-org1640630">
+<p>
+I'm going to use <a href="https://en.wikipedia.org/wiki/Siddhartha_(novel)">Siddhartha</a>, by Herman Hesse, which is available from Project Gutenberg.
+</p>
+
+<div class="highlight"><pre><span></span><span class="n">url</span> <span class="o">=</span> <span class="s2">"https://www.gutenberg.org/cache/epub/2500/pg2500.txt"</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="n">HTTPStatus</span><span class="o">.</span><span class="n">OK</span>
+<span class="n">source</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">text</span>
+</pre></div>
+
+<div class="highlight"><pre><span></span><span class="k">print</span><span class="p">(</span><span class="n">source</span><span class="p">[:</span><span class="mi">200</span><span class="p">])</span>
+</pre></div>
+
+<pre class="example">
+﻿The Project Gutenberg EBook of Siddhartha, by Herman Hesse
+
+This eBook is for the use of anyone anywhere at no cost and with
+almost no restrictions whatsoever.  You may copy it, give it away or
+r
+
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org1ed3bfb" class="outline-2">
+<h2 id="org1ed3bfb">The Punkt Sentence Tokenizer</h2>
+<div class="outline-text-2" id="text-org1ed3bfb">
+<p>
+The NLTK <a href="https://www.nltk.org/api/nltk.tokenize.html#module-nltk.tokenize.punkt">PunktSentenceTokenizer</a> uses an unsupervised model to break texts up into sentences. Since you have to train the model to make it work you should load it from a pickle file. In this case we want the model trained on the English language so I'll load <code>english.pickle</code>.
+</p>
+
+<div class="highlight"><pre><span></span><span class="n">tokenizer</span> <span class="o">=</span> <span class="n">nltk</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">"tokenizers/punkt/PY3/english.pickle"</span><span class="p">)</span>
+</pre></div>
+
+<p>
+Now you can break Sidhartha up into sentences using the tokenizer.
+</p>
+
+<div class="highlight"><pre><span></span><span class="n">sentences</span> <span class="o">=</span> <span class="n">tokenizer</span><span class="o">.</span><span class="n">tokenize</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sentences</span><span class="p">))</span>
+</pre></div>
+
+<pre class="example">
+1972
+
+</pre>
+
+<div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">sentence</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">sentences</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">5</span><span class="p">]):</span>
+    <span class="k">print</span><span class="p">(</span><span class="s2">"   {}: {}"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">sentence</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">"</span><span class="se">\r</span><span class="s2">"</span><span class="p">,</span> <span class="s2">""</span><span class="p">)))</span>
+</pre></div>
+
+<pre class="example">
+   0: You may copy it, give it away or
+re-use it under the terms of the Project Gutenberg License included
+with this eBook or online at www.gutenberg.org
+
+
+Title: Siddhartha
+
+Author: Herman Hesse
+
+Translator: Gunther Olesch, Anke Dreher, Amy Coulter, Stefan Langer and Semyon Chaichenets
+
+Release Date: April 6, 2008 [EBook #2500]
+Last updated: July 2, 2011
+Last updated: January 23, 2013
+
+Language: English
+
+
+*** START OF THIS PROJECT GUTENBERG EBOOK SIDDHARTHA ***
+
+
+
+
+Produced by Michael Pullen,  Chandra Yenco, Isaac Jones
+
+
+
+
+
+SIDDHARTHA
+
+An Indian Tale
+
+by Hermann Hesse
+
+
+
+
+
+FIRST PART
+
+To Romain Rolland, my dear friend
+
+
+
+
+THE SON OF THE BRAHMAN
+
+In the shade of the house, in the sunshine of the riverbank near the
+boats, in the shade of the Sal-wood forest, in the shade of the fig tree
+is where Siddhartha grew up, the handsome son of the Brahman, the young
+falcon, together with his friend Govinda, son of a Brahman.
+   1: The sun
+tanned his light shoulders by the banks of the river when bathing,
+performing the sacred ablutions, the sacred offerings.
+   2: In the mango
+grove, shade poured into his black eyes, when playing as a boy, when
+his mother sang, when the sacred offerings were made, when his father,
+the scholar, taught him, when the wise men talked.
+   3: For a long time,
+Siddhartha had been partaking in the discussions of the wise men,
+practising debate with Govinda, practising with Govinda the art of
+reflection, the service of meditation.
+</pre>
+
+
+<p>
+So you can see that it didn't get the pre-amble quite right. It took all the lines up until the first sentence of the text as being one sentence, but then after that it seemed to do okay. It was probably looking for periods or some such. This is important to note, because it means that it might not work as well for things like logs or other sources where the input isn't made up of complete, well-formed sentences.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org4b56d3a" class="outline-2">
+<h2 id="org4b56d3a">References</h2>
+<div class="outline-text-2" id="text-org4b56d3a">
+<ul class="org-ul">
+<li>“Natural Language Toolkit — NLTK 3.3 Documentation.” Accessed July 30, 2018. <a href="http://www.nltk.org/">http://www.nltk.org/</a>.</li>
+<li>Perkins, Jacob. Python 3 Text Processing with NLTK 3 Cookbook: Over 80 Practical Recipes on Natural Language Processing Techniques Using Python’s NLTK 3.0. 2. ed. Packt Open Source. Birmingham: Packt Publ, 2014.</li>
+</ul>
+</div>
+</div>
+    </div>
+    </article><article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/test/" class="u-url">Test</a></h1>
         <div class="metadata">
             <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
                 Cloistered Monkey
@@ -89,9 +362,9 @@
             <p class="dateline"><a href="posts/test/" rel="bookmark"><time class="published dt-published" datetime="2018-07-27T16:57:13-07:00" title="2018-07-27 16:57">2018-07-27 16:57</time></a></p>
         </div>
     </header><div class="e-content entry-content">
-    <div id="outline-container-org0987764" class="outline-2">
-<h2 id="org0987764">Introduction</h2>
-<div class="outline-text-2" id="text-org0987764">
+    <div id="outline-container-org713a77a" class="outline-2">
+<h2 id="org713a77a">Introduction</h2>
+<div class="outline-text-2" id="text-org713a77a">
 <p>
 This is a first post to see if it will build.
 </p>

@@ -7,18 +7,30 @@
                         http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
  <sitemap>
   <loc>https://necromuralist.github.io/text-processing/categories/cat_testing.xml</loc>
-  <lastmod>2018-07-27T23:58:00Z</lastmod>
+  <lastmod>2018-07-29T23:48:00Z</lastmod>
+ </sitemap>
+ <sitemap>
+  <loc>https://necromuralist.github.io/text-processing/categories/cat_tokenizing.xml</loc>
+  <lastmod>2018-07-30T04:25:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://necromuralist.github.io/text-processing/categories/test.xml</loc>
-  <lastmod>2018-07-27T23:58:00Z</lastmod>
+  <lastmod>2018-07-29T23:48:00Z</lastmod>
+ </sitemap>
+ <sitemap>
+  <loc>https://necromuralist.github.io/text-processing/categories/tokenizing-nltk-wordnet-basics.xml</loc>
+  <lastmod>2018-07-30T02:58:00Z</lastmod>
+ </sitemap>
+ <sitemap>
+  <loc>https://necromuralist.github.io/text-processing/categories/tokenizing-nltk.xml</loc>
+  <lastmod>2018-07-30T04:25:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://necromuralist.github.io/text-processing/rss.xml</loc>
-  <lastmod>2018-07-27T23:58:00Z</lastmod>
+  <lastmod>2018-07-30T04:25:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://necromuralist.github.io/text-processing/sitemap.xml</loc>
-  <lastmod>2018-07-27T23:58:00Z</lastmod>
+  <lastmod>2018-07-30T04:25:00Z</lastmod>
  </sitemap>
 </sitemapindex>

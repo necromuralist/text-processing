@@ -1,0 +1,46 @@
+#+BEGIN_COMMENT
+.. title: Tokenizing Words With Regular Expressions
+.. slug: tokenizing-words-with-regular-expressions
+.. date: 2018-07-29 21:15:21 UTC-07:00
+.. tags: tokenizing nltk
+.. category: tokenizing
+.. link: 
+.. description: Tokenizing sentences with regular expressions.
+.. type: text
+#+END_COMMENT
+
+#+BEGIN_SRC python :session tokenizing :results none
+from nltk.tokenize import RegexpTokenizer
+#+END_SRC
+
+* Introduction
+  While you can tokenize sentences into words using the =TreebankTokenizer=, NLTK also provides the =RegexpTokenizer= to give you more flexibility in tokenizing sentences. You could do the same thing wih the built-in =re= module, but he interface to the =RegexpTokenizer= matches the other tokenizers so you can use use them interchangeably depending on what you need.
+
+* Word Tokenization
+  By default, the =RegexpTokenizer= will match words and split on anything that doesn't match the expression given, assuming that they make up the gaps. Here's how to match any alphanumeric characters and apostrophes.
+
+#+BEGIN_SRC python :session tokenizing :results none
+tokenizer = RegexpTokenizer("[\w']+")
+#+END_SRC
+
+#+BEGIN_SRC python :session tokenizing :results output :exports both
+source = "I'm a man of wealth and taste, and touch, and smell."
+print(tokenizer.tokenize(source))
+#+END_SRC
+
+#+RESULTS:
+: ["I'm", 'a', 'man', 'of', 'wealth', 'and', 'taste', 'and', 'touch', 'and', 'smell']
+
+Note that by adding the apostrophe ("'") to the expression we were able to keep the contraction together, something that the =TreebankTokenizer= doesn't do.
+* Gap Tokenization
+  Alternatively, you can define what the tokenizer should split on. There are already tokenizers for white-space, but you could also add punctiation this way.
+
+#+BEGIN_SRC python :session tokenizing :results output :exports both
+tokenizer = RegexpTokenizer("[\s,]+", gaps=True)
+print(tokenizer.tokenize(source))
+#+END_SRC
+
+#+RESULTS:
+: ["I'm", 'a', 'man', 'of', 'wealth', 'and', 'taste', 'and', 'touch', 'and', 'smell.']
+
+The only difference here is that the period was kept, but if you use a sentence tokenizer this would likely not happen anyway.

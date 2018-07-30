@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article# " lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="description" content="An introduction to breaking a text up into sentences.">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tokenizing Text To Sentences With NLTK | Learning Text-Processing</title>
+<link href="../../assets/css/all-nocdn.css" rel="stylesheet" type="text/css">
+<link href="../../assets/css/ipython.min.css" rel="stylesheet" type="text/css">
+<link href="../../assets/css/nikola_ipython.css" rel="stylesheet" type="text/css">
+<meta name="theme-color" content="#5670d4">
+<meta name="generator" content="Nikola (getnikola.com)">
+<link rel="alternate" type="application/rss+xml" title="RSS" href="../../rss.xml">
+<link rel="canonical" href="https://necromuralist.github.io/text-processing/posts/tokenizing-text-to-sentences-with-nltk-and-wordnet/">
+<!--[if lt IE 9]><script src="../../assets/js/html5.js"></script><![endif]--><script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML">
+</script><meta name="author" content="Cloistered Monkey">
+<link rel="prev" href="../test/" title="Test" type="text/html">
+<link rel="next" href="../sentences-to-words/" title="Sentences to Words" type="text/html">
+<meta property="og:site_name" content="Learning Text-Processing">
+<meta property="og:title" content="Tokenizing Text To Sentences With NLTK">
+<meta property="og:url" content="https://necromuralist.github.io/text-processing/posts/tokenizing-text-to-sentences-with-nltk-and-wordnet/">
+<meta property="og:description" content="An introduction to breaking a text up into sentences.">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2018-07-29T17:43:49-07:00">
+<meta property="article:tag" content="tokenizing nltk wordnet basics">
+</head>
+<body>
+<a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
+
+<!-- Menubar -->
+
+<nav class="navbar navbar-default navbar-static-top"><div class="container">
+<!-- This keeps the margins nice -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="https://necromuralist.github.io/text-processing/">
+
+                <span id="blog-title">Learning Text-Processing</span>
+            </a>
+        </div>
+<!-- /.navbar-header -->
+        <div class="collapse navbar-collapse" id="bs-navbar" aria-expanded="false">
+            <ul class="nav navbar-nav">
+<li>
+<a href="../../archive.html">Archive</a>
+                </li>
+<li>
+<a href="../../categories/">Tags</a>
+                </li>
+<li>
+<a href="../../rss.xml">RSS feed</a>
+                </li>
+<li>
+<a href="../../sphinx/index.html">Documentation</a>
+
+                
+            </li>
+</ul>
+<!-- Google custom search --><form method="get" action="https://www.google.com/search" class="navbar-form navbar-right" role="search">
+<div class="form-group">
+<input type="text" name="q" class="form-control" placeholder="Search">
+</div>
+<button type="submit" class="btn btn-primary">
+	<span class="glyphicon glyphicon-search"></span>
+</button>
+<input type="hidden" name="sitesearch" value="https://necromuralist.github.io/text-processing/">
+</form>
+<!-- End of custom search -->
+
+
+            <ul class="nav navbar-nav navbar-right">
+<li>
+    <a href="index.org" id="sourcelink">Source</a>
+    </li>
+
+                
+            </ul>
+</div>
+<!-- /.navbar-collapse -->
+    </div>
+<!-- /.container -->
+</nav><!-- End of Menubar --><div class="container" id="content" role="main">
+    <div class="body-content">
+        <!--Body content-->
+        <div class="row">
+            
+            
+<article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title" itemprop="headline name"><a href="." class="u-url">Tokenizing Text To Sentences With NLTK</a></h1>
+
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
+                    Cloistered Monkey
+            </span></p>
+            <p class="dateline"><a href="." rel="bookmark"><time class="published dt-published" datetime="2018-07-29T17:43:49-07:00" itemprop="datePublished" title="2018-07-29 17:43">2018-07-29 17:43</time></a></p>
+            
+        <p class="sourceline"><a href="index.org" class="sourcelink">Source</a></p>
+
+        </div>
+        
+
+    </header><div class="e-content entry-content" itemprop="articleBody text">
+    <div class="highlight"><pre><span></span><span class="c1"># python standard library</span>
+<span class="kn">from</span> <span class="nn">http</span> <span class="kn">import</span> <span class="n">HTTPStatus</span>
+<span class="c1"># pypi</span>
+<span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">import</span> <span class="nn">nltk</span>
+</pre></div>
+
+<div id="outline-container-org5a54186" class="outline-2">
+<h2 id="org5a54186">Introduction</h2>
+<div class="outline-text-2" id="text-org5a54186">
+<p>
+This is going to be a quick look at splitting a text source into sentences.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org1640630" class="outline-2">
+<h2 id="org1640630">The Source</h2>
+<div class="outline-text-2" id="text-org1640630">
+<p>
+I'm going to use <a href="https://en.wikipedia.org/wiki/Siddhartha_(novel)">Siddhartha</a>, by Herman Hesse, which is available from Project Gutenberg.
+</p>
+
+<div class="highlight"><pre><span></span><span class="n">url</span> <span class="o">=</span> <span class="s2">"https://www.gutenberg.org/cache/epub/2500/pg2500.txt"</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="n">HTTPStatus</span><span class="o">.</span><span class="n">OK</span>
+<span class="n">source</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">text</span>
+</pre></div>
+
+<div class="highlight"><pre><span></span><span class="k">print</span><span class="p">(</span><span class="n">source</span><span class="p">[:</span><span class="mi">200</span><span class="p">])</span>
+</pre></div>
+
+<pre class="example">
+﻿The Project Gutenberg EBook of Siddhartha, by Herman Hesse
+
+This eBook is for the use of anyone anywhere at no cost and with
+almost no restrictions whatsoever.  You may copy it, give it away or
+r
+
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org1ed3bfb" class="outline-2">
+<h2 id="org1ed3bfb">The Punkt Sentence Tokenizer</h2>
+<div class="outline-text-2" id="text-org1ed3bfb">
+<p>
+The NLTK <a href="https://www.nltk.org/api/nltk.tokenize.html#module-nltk.tokenize.punkt">PunktSentenceTokenizer</a> uses an unsupervised model to break texts up into sentences. Since you have to train the model to make it work you should load it from a pickle file. In this case we want the model trained on the English language so I'll load <code>english.pickle</code>.
+</p>
+
+<div class="highlight"><pre><span></span><span class="n">tokenizer</span> <span class="o">=</span> <span class="n">nltk</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">"tokenizers/punkt/PY3/english.pickle"</span><span class="p">)</span>
+</pre></div>
+
+<p>
+Now you can break Sidhartha up into sentences using the tokenizer.
+</p>
+
+<div class="highlight"><pre><span></span><span class="n">sentences</span> <span class="o">=</span> <span class="n">tokenizer</span><span class="o">.</span><span class="n">tokenize</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sentences</span><span class="p">))</span>
+</pre></div>
+
+<pre class="example">
+1972
+
+</pre>
+
+<div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">sentence</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">sentences</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">5</span><span class="p">]):</span>
+    <span class="k">print</span><span class="p">(</span><span class="s2">"   {}: {}"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">sentence</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">"</span><span class="se">\r</span><span class="s2">"</span><span class="p">,</span> <span class="s2">""</span><span class="p">)))</span>
+</pre></div>
+
+<pre class="example">
+   0: You may copy it, give it away or
+re-use it under the terms of the Project Gutenberg License included
+with this eBook or online at www.gutenberg.org
+
+
+Title: Siddhartha
+
+Author: Herman Hesse
+
+Translator: Gunther Olesch, Anke Dreher, Amy Coulter, Stefan Langer and Semyon Chaichenets
+
+Release Date: April 6, 2008 [EBook #2500]
+Last updated: July 2, 2011
+Last updated: January 23, 2013
+
+Language: English
+
+
+*** START OF THIS PROJECT GUTENBERG EBOOK SIDDHARTHA ***
+
+
+
+
+Produced by Michael Pullen,  Chandra Yenco, Isaac Jones
+
+
+
+
+
+SIDDHARTHA
+
+An Indian Tale
+
+by Hermann Hesse
+
+
+
+
+
+FIRST PART
+
+To Romain Rolland, my dear friend
+
+
+
+
+THE SON OF THE BRAHMAN
+
+In the shade of the house, in the sunshine of the riverbank near the
+boats, in the shade of the Sal-wood forest, in the shade of the fig tree
+is where Siddhartha grew up, the handsome son of the Brahman, the young
+falcon, together with his friend Govinda, son of a Brahman.
+   1: The sun
+tanned his light shoulders by the banks of the river when bathing,
+performing the sacred ablutions, the sacred offerings.
+   2: In the mango
+grove, shade poured into his black eyes, when playing as a boy, when
+his mother sang, when the sacred offerings were made, when his father,
+the scholar, taught him, when the wise men talked.
+   3: For a long time,
+Siddhartha had been partaking in the discussions of the wise men,
+practising debate with Govinda, practising with Govinda the art of
+reflection, the service of meditation.
+</pre>
+
+
+<p>
+So you can see that it didn't get the pre-amble quite right. It took all the lines up until the first sentence of the text as being one sentence, but then after that it seemed to do okay. It was probably looking for periods or some such. This is important to note, because it means that it might not work as well for things like logs or other sources where the input isn't made up of complete, well-formed sentences.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org4b56d3a" class="outline-2">
+<h2 id="org4b56d3a">References</h2>
+<div class="outline-text-2" id="text-org4b56d3a">
+<ul class="org-ul">
+<li>“Natural Language Toolkit — NLTK 3.3 Documentation.” Accessed July 30, 2018. <a href="http://www.nltk.org/">http://www.nltk.org/</a>.</li>
+<li>Perkins, Jacob. Python 3 Text Processing with NLTK 3 Cookbook: Over 80 Practical Recipes on Natural Language Processing Techniques Using Python’s NLTK 3.0. 2. ed. Packt Open Source. Birmingham: Packt Publ, 2014.</li>
+</ul>
+</div>
+</div>
+    </div>
+    <aside class="postpromonav"><nav><ul itemprop="keywords" class="tags">
+<li><a class="tag p-category" href="../../categories/tokenizing-nltk-wordnet-basics/" rel="tag">tokenizing nltk wordnet basics</a></li>
+        </ul>
+<ul class="pager hidden-print">
+<li class="previous">
+                <a href="../test/" rel="prev" title="Test">Previous post</a>
+            </li>
+            <li class="next">
+                <a href="../sentences-to-words/" rel="next" title="Sentences to Words">Next post</a>
+            </li>
+        </ul></nav></aside></article>
+</div>
+        <!--End of body content-->
+
+        <footer id="footer">
+            Contents © 2018         <a href="mailto:necromuralist@protonmail.com">Cloistered Monkey</a> - Powered by         <a href="https://getnikola.com" rel="nofollow">Nikola</a>         <a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png"></a><br>This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.
+            
+        </footer>
+</div>
+</div>
+
+
+            <script src="../../assets/js/all-nocdn.js"></script><script>$('a.image-reference:not(.islink) img:not(.islink)').parent().colorbox({rel:"gal",maxWidth:"100%",maxHeight:"100%",scalePhotos:true});</script><!-- fancy dates --><script>
+    moment.locale("en");
+    fancydates(0, "YYYY-MM-DD HH:mm");
+    </script><!-- end fancy dates -->
+</body>
+</html>
