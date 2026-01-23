@@ -78,7 +78,7 @@ ipywidgets==7.3.1
     # via jupyter
 jedi==0.12.1
     # via ptpython
-jinja2==2.10
+jinja2==2.11.3
     # via
     #   nbconvert
     #   notebook
